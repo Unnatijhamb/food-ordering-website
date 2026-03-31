@@ -8,6 +8,129 @@
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 />
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+
+<style>
+   .draw-box {
+    width: 220px;
+    background: white;
+    padding: 12px;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    text-align: center;
+    flex-shrink: 0;
+}
+/* Modal background */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+}
+
+/* Modal box */
+.modal-content {
+    background: white;
+    margin: 8% auto;
+    padding: 20px;
+    width: 420px;
+    border-radius: 16px;
+    text-align: center;
+    position: relative;
+}
+
+/* Close button */
+.close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 22px;
+    cursor: pointer;
+}
+/* Color buttons */
+.colors button {
+    margin: 5px;
+    border: none;
+    cursor: pointer;
+}
+/* AI BUTTON */
+.ai-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 14px;
+    border-radius:20px;
+    border:1px solid #ddd;
+    background:#fff;
+    font-size:14px;
+    cursor:pointer;
+    transition:0.2s ease;
+}
+
+.ai-btn:hover{
+    background:#f7f7f7;
+    border-color:#ccc;
+}
+
+/* MODAL */
+.ai-modal{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.5);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+/* MODAL CONTENT */
+.ai-modal-content{
+    background:white;
+    padding:20px;
+    border-radius:16px;
+    width:340px;
+    text-align:center;
+    box-shadow:0 10px 40px rgba(0,0,0,0.2);
+}
+
+/* HEADER */
+.ai-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+}
+
+/* CANVAS */
+
+/* FIND BUTTON */
+.find-btn{
+    background:#e23744;
+    color:white;
+    border:none;
+    padding:10px 18px;
+    border-radius:10px;
+    cursor:pointer;
+}
+.restaurants {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+}
+#drawCanvas{
+    border:2px dashed #e23744;
+    border-radius:10px;
+    background:#fafafa;
+}
+</style>
 
 </head>
 <body>
@@ -74,7 +197,6 @@
         </div>
     </div>
 
-    <!-- FILTERS -->
     <div class="filters-modern">
 
     <div class="filter-chip active" onclick="filterItems('all', event)">☰ Filters</div>
@@ -88,8 +210,13 @@
     <div class="filter-chip" onclick="filterItems('nonveg', event)">Non-Veg</div>
 
     <div class="filter-chip" onclick="filterItems('price', event)">₹ Under 200</div>
-
 </div>
+<div class="ai-btn" onclick="openAIModal()">
+    🎨 Draw your craving
+</div>
+
+</header>
+</header>
     <div class="page-tagline">
     DISCOVER THE BEST RESTAURANTS, CAFÉS AND FAST FOOD AROUND YOU
 </div>
@@ -425,7 +552,188 @@ searchInput.addEventListener("keyup", function(){
 function setOrder(name){
     localStorage.setItem("currentOrder", name);
 }
+let canvas, ctx;
+let drawing = false;
+let color = "black";
 
+function initCanvas(){
+
+    canvas = document.getElementById("drawCanvas");
+    ctx = canvas.getContext("2d");
+
+    // FIX SIZE (VERY IMPORTANT)
+    canvas.width = 300;
+    canvas.height = 200;
+
+    // START DRAW
+    canvas.addEventListener("mousedown", (e) => {
+        drawing = true;
+        ctx.beginPath();
+        ctx.moveTo(e.offsetX, e.offsetY);
+    });
+
+    // DRAW
+    canvas.addEventListener("mousemove", (e) => {
+        if (!drawing) return;
+
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 4;
+        ctx.lineCap = "round";
+        ctx.stroke();
+    });
+
+    // STOP
+    canvas.addEventListener("mouseup", () => drawing = false);
+    canvas.addEventListener("mouseleave", () => drawing = false);
+}
+
+
+function setColor(c){
+    color = c;
+}
+let model;
+
+async function loadModel(){
+    model = await mobilenet.load();
+    console.log("✅ AI Model Loaded");
+}
+
+loadModel();
+
+async function sendDrawing(){
+
+    if(!model){
+        alert("AI still loading... wait");
+        return;
+    }
+
+    const canvas = document.getElementById("drawCanvas");
+
+    const img = new Image();
+    img.src = canvas.toDataURL();
+
+    img.onload = async () => {
+
+        const predictions = await model.classify(img);
+
+        console.log("RAW AI:", predictions[0].className);
+
+        // ✅ 👉 ADD YOUR MAPPING HERE
+        let detectedItem;
+
+// 1️⃣ Try canvas color logic first
+const colorResult = detectFromCanvas();
+
+if(colorResult){
+    detectedItem = colorResult;
+}
+else{
+
+    // 2️⃣ fallback to AI
+    let raw = predictions[0].className.toLowerCase();
+
+    if(raw.includes("burger") || raw.includes("sandwich")){
+        detectedItem = "burger";
+    }
+    else if(raw.includes("cake") || raw.includes("dessert")){
+        detectedItem = "cake";
+    }
+    else if(raw.includes("chicken")){
+        detectedItem = "chicken";
+    }
+    else{
+        detectedItem = "pizza";
+    }
+}
+
+
+        console.log("FINAL DETECTED:", detectedItem);
+
+        // ✅ redirect AFTER mapping
+        redirectToRestaurant(detectedItem);
+    };
+}
+
+
+function openAIModal(){
+    document.getElementById("aiModal").style.display = "flex";
+
+    setTimeout(() => {
+        initCanvas();   // 🔥 THIS FIXES YOUR ISSUE
+    }, 100);
+}
+function closeAIModal(){
+    document.getElementById("aiModal").style.display = "none";
+}
+function redirectToRestaurant(detectedItem){
+
+    const cards = document.querySelectorAll(".card");
+
+    for(let card of cards){
+
+        const searchText = card.getAttribute("data-search");
+
+        console.log("Checking:", searchText);
+
+        if(searchText && searchText.includes(detectedItem)){
+
+            const link = card.closest(".restaurant-link");
+
+            if(link){
+                console.log("Redirecting to:", link.href);
+                window.location.href = link.href;
+                return;
+            }
+        }
+    }
+
+    alert("No matching restaurant found");
+}
+function detectFromCanvas(){
+
+    const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+
+    let red = 0, green = 0, blue = 0;
+
+    for(let i = 0; i < data.length; i += 4){
+        red += data[i];
+        green += data[i+1];
+        blue += data[i+2];
+    }
+
+    if(red > green && red > blue){
+        return "pizza";
+    }
+    else if(green > red){
+        return "veg";
+    }
+    else{
+        return null;
+    }
+}
 </script>
+<div id="aiModal" class="ai-modal">
+
+  <div class="ai-modal-content">
+
+    <div class="ai-header">
+        <span>Draw what you feel like eating 🍕</span>
+        <button onclick="closeAIModal()">✕</button>
+    </div>
+
+    <canvas id="drawCanvas" width="300" height="200"></canvas>
+
+    <div class="colors">
+      <button onclick="setColor('black')">⚫</button>
+      <button onclick="setColor('red')">🔴</button>
+      <button onclick="setColor('green')">🟢</button>
+    </div>
+
+    <button class="find-btn" onclick="sendDrawing()">Find</button>
+
+  </div>
+
+</div>
 </body>
 </html>

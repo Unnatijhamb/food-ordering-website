@@ -842,7 +842,18 @@ loadCart();
 
 }
 function goToPayment(){
-window.location.href="payment.html";
+
+    const cart = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+    if(cart.length === 0){
+        alert("Cart is empty!");
+        return;
+    }
+
+    // ✅ Force-save again before navigating
+    localStorage.setItem("cartItems", JSON.stringify(cart));
+
+    window.location.href = "payment.html";
 }
 function launchConfetti(){
 

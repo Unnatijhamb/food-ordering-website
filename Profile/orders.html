@@ -76,7 +76,7 @@ if(orders.length === 0){
     container.innerHTML = "<p style='text-align:center;color:#888;'>No orders yet</p>";
 } else {
 
-    orders.forEach(order => {
+   orders.forEach((order, index) => {
 
     const div = document.createElement("div");
     div.className = "order-card";
@@ -94,7 +94,7 @@ if(orders.length === 0){
         <p class="order-meta">${order.price} • ${order.status}</p>
         <small>${order.time}</small>
 
-        <button class="reorder-btn" onclick="reorder('${order.name}')">
+        <button class="reorder-btn" onclick="reorder(${index})">
             Reorder
         </button>
     </div>
@@ -106,9 +106,25 @@ if(orders.length === 0){
 });
 
 }
-function reorder(name){
-    localStorage.setItem("currentOrder", name);
-    window.location.href = "restaurant.html";
+function reorder(index){
+
+    const orders = JSON.parse(localStorage.getItem("eatzoOrders")) || [];
+
+    const selectedOrder = orders[index];
+
+    if(!selectedOrder || !selectedOrder.cartData){
+        alert("Order data missing");
+        return;
+    }
+
+    // ✅ restore cart
+    localStorage.setItem("cartItems", JSON.stringify(selectedOrder.cartData));
+
+    // ✅ set restaurant
+    localStorage.setItem("currentRestaurant", selectedOrder.name);
+
+    // ✅ go to cart
+    window.location.href = "../cart.html";
 }
 </script>
 

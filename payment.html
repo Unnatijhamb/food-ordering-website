@@ -402,6 +402,15 @@ font-size:60px;
   justify-content:space-between;
   align-items:center;
 }
+#deliveryCanvas {
+    width: 100%;
+    height: 140px;
+    margin-top: 10px;
+}
+#deliveryCanvas {
+    background: #f8fafc;
+    border-radius: 12px;
+}
 </style>
 </head>
 
@@ -534,7 +543,7 @@ Confirm Order
       <h3>Tracking your order</h3>
       <span class="order-id">#FD-20485</span>
     </div>
-
+     <canvas id="deliveryCanvas" width="600" height="140"></canvas>
    <div class="tracking-info">
 
   <!-- LEFT SIDE -->
@@ -598,6 +607,7 @@ Confirm Order
 
       </div>
     </div>
+    
 
     <!-- KEEP canvas (hidden, don't delete) -->
     <canvas id="trackingCanvas" width="500" height="80" style="display:none;"></canvas>
@@ -620,6 +630,7 @@ Confirm Order
 </div>
 
 <script>
+  let currentStep = 0;
 
 function showSection(id){
 
@@ -632,8 +643,7 @@ document.getElementById(id).style.display="block";
 }
 
 function placeOrder(){
-
-localStorage.removeItem("cartItems");
+  
 
 document.getElementById("paymentUI").style.display="none";
 
@@ -649,7 +659,7 @@ setTimeout(()=>{
 function startTrackingCanvas(){
 
 const steps = 5;
-let currentStep = 0;
+
 
 const stepData = [
 {status:"Order Placed",text:"Order confirmed"},
@@ -676,7 +686,21 @@ else if(i === currentStep) el.classList.add("current");
 
 document.getElementById("statusText").innerText = stepData[currentStep].text;
 document.getElementById("orderStatus").innerText = stepData[currentStep].status;
+
+if(currentStep <= 2){
+    // waiting states
+    targetT = 0.15;
 }
+else if(currentStep === 3){
+    // start delivery slowly
+    if(targetT < 0.2) targetT = 0.2;
+}
+else if(currentStep === 4){
+    // final state (but don't jump)
+    targetT = 1;
+}
+}
+
 
 function run(){
 
@@ -694,6 +718,7 @@ setTimeout(()=>{
         const orderName = localStorage.getItem("currentOrder") || "Order";
 
         saveOrder(orderName);
+        localStorage.removeItem("cartItems");
 
         console.log("Order saved:", orderName);
 
@@ -753,19 +778,29 @@ function saveOrder(orderName){
         "Cafe Coffee Day": "https://images.pexels.com/photos/302899/pexels-photo-302899.jpeg",
         "Subway": "https://tse2.mm.bing.net/th/id/OIP.5EhnGT8H6pt7t9uA2FfblwHaEO"
     };
-
-     const newOrder = {
-        name: orderName,
-        image: images[orderName] || "https://via.placeholder.com/60", // ✅ FIXED
-        time: new Date().toLocaleString(),
-        const cart = JSON.parse(localStorage.getItem("cartItems")) || [];
+const cart = JSON.parse(localStorage.getItem("cartItems")) || [];
 
 const itemsText = cart.map(item => `${item.name} x${item.qty}`).join(", ");
 
-const totalPrice = cart.reduce((sum, item) => sum + item.price, 0);    // ✅ FIXED
-        price: "₹" + (localStorage.getItem("totalPrice") || "0"),     // ✅ FIXED
-        status: "Delivered"
-    };
+const totalPrice = cart.reduce((sum, item) => sum + (item.price), 0);
+
+
+    const newOrder = {
+    name: orderName,
+    image: images[orderName] || "https://via.placeholder.com/60",
+    time: new Date().toLocaleString(),
+    items: itemsText || "Food Items",   // ✅ FIXED
+    price: "₹" + totalPrice,            // ✅ FIXED
+    status: "Delivered",
+     cartData: cart.map(item => ({
+        name: item.name,
+        price: item.price,
+        qty: item.qty,
+        type: item.type,
+        menuIndex: item.menuIndex
+    }))
+    
+};
 
     orders.unshift(newOrder);
     
@@ -777,7 +812,172 @@ const totalPrice = cart.reduce((sum, item) => sum + item.price, 0);    // ✅ FI
     localStorage.setItem("eatzoOrders", JSON.stringify(orders));
     
 }
+const canvas = document.getElementById("deliveryCanvas");
+const ctx = canvas.getContext("2d");
 
+let t = 0;        // 0 → 1 (progress)
+let targetT = 0;  // where rider should go
+
+// 🛣️ Bezier curve (road)
+function getPoint(t) {
+    const startX = 40, startY = 90;
+    const cp1X = 180, cp1Y = 20;
+    const cp2X = 400, cp2Y = 140;
+    const endX = canvas.width - 40, endY = 90;
+
+    const x =
+        Math.pow(1 - t, 3) * startX +
+        3 * Math.pow(1 - t, 2) * t * cp1X +
+        3 * (1 - t) * Math.pow(t, 2) * cp2X +
+        Math.pow(t, 3) * endX;
+
+    const y =
+        Math.pow(1 - t, 3) * startY +
+        3 * Math.pow(1 - t, 2) * t * cp1Y +
+        3 * (1 - t) * Math.pow(t, 2) * cp2Y +
+        Math.pow(t, 3) * endY;
+
+    return { x, y };
+}
+
+// 🛵 draw bike
+function drawBike(x, y) {
+    ctx.save();
+    ctx.translate(x, y);
+
+    // wheels
+    ctx.beginPath();
+    ctx.arc(-12, 10, 6, 0, Math.PI * 2);
+    ctx.arc(12, 10, 6, 0, Math.PI * 2);
+    ctx.fillStyle = "#111";
+    ctx.fill();
+
+    // body
+    ctx.beginPath();
+    ctx.moveTo(-12, 10);
+    ctx.lineTo(0, 0);
+    ctx.lineTo(12, 10);
+    ctx.strokeStyle = "#e23744";
+    ctx.lineWidth = 4;
+    ctx.stroke();
+
+    // rider head
+    ctx.beginPath();
+    ctx.arc(0, -6, 6, 0, Math.PI * 2);
+    ctx.fillStyle = "#e23744";
+    ctx.fill();
+
+    ctx.restore();
+    // shadow
+ctx.beginPath();
+ctx.ellipse(0, 12, 14, 4, 0, 0, Math.PI * 2);
+ctx.fillStyle = "rgba(0,0,0,0.15)";
+ctx.fill();
+}
+// 🎨 draw everything
+function drawScene() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+ ctx.strokeStyle = "#cbd5e1"; // soft bluish road
+ctx.lineWidth = 6;
+
+ctx.strokeStyle = "#94a3b8";
+ctx.lineWidth = 2;
+// 🗺️ draw map grid first (background)
+drawMapBackground();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // road curve
+    ctx.beginPath();
+    ctx.moveTo(40, 90);
+    ctx.bezierCurveTo(180, 20, 400, 140, canvas.width - 40, 90);
+    ctx.strokeStyle = "#d1d5db";
+    ctx.lineWidth = 6;
+    ctx.stroke();
+
+    // dashed middle line
+    ctx.beginPath();
+    ctx.setLineDash([8, 8]);
+    ctx.moveTo(40, 90);
+    ctx.bezierCurveTo(180, 20, 400, 140, canvas.width - 40, 90);
+    ctx.strokeStyle = "#9ca3af";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // start (restaurant)
+    ctx.fillStyle = "#16a34a";
+    ctx.fillRect(30, 70, 12, 40);
+
+    // end (home)
+    ctx.fillStyle = "#2563eb";
+    ctx.fillRect(canvas.width - 42, 70, 12, 40);
+
+    // rider position
+    const pos = getPoint(t);
+
+let bounce = 0;
+if(currentStep <= 2){
+    bounce = Math.sin(Date.now() * 0.005) * 2;
+}
+
+drawBike(pos.x, pos.y + bounce);
+   
+}
+function drawMapBackground() {
+
+    // 🎨 base background
+    ctx.fillStyle = "#f4f7fb";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // 🛣️ fake roads (soft curves)
+    ctx.strokeStyle = "rgba(0,0,0,0.04)";
+    ctx.lineWidth = 8;
+
+    for(let i = 0; i < 3; i++){
+        ctx.beginPath();
+        ctx.moveTo(0, 40 + i * 30);
+
+        ctx.bezierCurveTo(
+            canvas.width * 0.3, 20 + i * 40,
+            canvas.width * 0.6, 120 - i * 30,
+            canvas.width, 60 + i * 20
+        );
+
+        ctx.stroke();
+    }
+
+    // 🌫️ map patches (subtle blobs)
+    ctx.fillStyle = "rgba(0,0,0,0.02)";
+
+    ctx.beginPath();
+    ctx.arc(120, 40, 30, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(350, 100, 40, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(500, 30, 25, 0, Math.PI * 2);
+    ctx.fill();
+}
+// 🎞️ smooth animation
+function animate() {
+
+    if(currentStep === 3){
+        // 🚚 DELIVERY PHASE → slow constant movement
+        t += 0.0015;   // adjust speed here (smaller = slower)
+        if(t > 0.95) t = 0.95;
+    }
+    else{
+        // smooth easing for other states
+        t += (targetT - t) * 0.03;
+    }
+
+    drawScene();
+    requestAnimationFrame(animate);
+}
+animate();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </body>

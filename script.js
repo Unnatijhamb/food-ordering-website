@@ -516,5 +516,47 @@ function saveAddress(){
     window.location.href = "cart.html";
 
 }
+let model;
 
+async function loadModel(){
+    model = await mobilenet.load();
+    console.log("AI Model Loaded");
+}
+
+loadModel();
+const canvas = document.getElementById("drawCanvas");
+const ctx = canvas.getContext("2d");
+
+let drawing = false;
+let currentColor = "black";
+
+// START DRAWING
+canvas.addEventListener("mousedown", (e) => {
+    drawing = true;
+    ctx.beginPath();
+    ctx.moveTo(e.offsetX, e.offsetY);
+});
+
+// DRAW
+canvas.addEventListener("mousemove", (e) => {
+    if (!drawing) return;
+
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.strokeStyle = currentColor;
+    ctx.lineWidth = 3;
+    ctx.lineCap = "round";
+    ctx.stroke();
+});
+
+// STOP DRAWING
+canvas.addEventListener("mouseup", () => {
+    drawing = false;
+});
+
+canvas.addEventListener("mouseleave", () => {
+    drawing = false;
+});
+function setColor(color){
+    currentColor = color;
+}
 
