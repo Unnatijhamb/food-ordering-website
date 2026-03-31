@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Previous Orders</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+    .order-card{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    background:#fff;
+    padding:12px;
+    border-radius:12px;
+    margin-bottom:12px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.05);
+}
+
+.order-img img{
+    width:60px;
+    height:60px;
+    object-fit:cover;
+    border-radius:10px;
+}
+
+.order-details strong{
+    font-size:15px;
+    display:block;
+}
+
+.order-details small{
+    color:#888;
+    font-size:12px;
+}
+.order-items{
+    font-size:13px;
+    color:#555;
+    margin:4px 0;
+}
+
+.order-meta{
+    font-size:13px;
+    color:#888;
+}
+
+.reorder-btn{
+    margin-top:6px;
+    padding:6px 12px;
+    border:none;
+    background:#e23744;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:13px;
+}
+</style>
+</head>
+
+<body class="profile-body">
+
+<div class="profile-topbar">
+    <a href="profile.html" class="back-btn">←</a>
+    <span>Previous Orders</span>
+</div>
+
+<div class="profile-container" id="ordersContainer">
+
+</div>
+
+<script>
+
+const container = document.getElementById("ordersContainer");
+
+const orders = JSON.parse(localStorage.getItem("eatzoOrders")) || [];
+
+if(orders.length === 0){
+    container.innerHTML = "<p style='text-align:center;color:#888;'>No orders yet</p>";
+} else {
+
+    orders.forEach(order => {
+
+    const div = document.createElement("div");
+    div.className = "order-card";
+
+    div.innerHTML = `
+        <div class="order-img">
+            <img src="${order.image}" alt="">
+        </div>
+            
+     
+
+        <div class="order-details">
+        <strong>${order.name}</strong>
+        <p class="order-items">${order.items}</p>
+        <p class="order-meta">${order.price} • ${order.status}</p>
+        <small>${order.time}</small>
+
+        <button class="reorder-btn" onclick="reorder('${order.name}')">
+            Reorder
+        </button>
+    </div>
+    `;
+    
+
+    container.appendChild(div);
+
+});
+
+}
+function reorder(name){
+    localStorage.setItem("currentOrder", name);
+    window.location.href = "restaurant.html";
+}
+</script>
+
+</body>
+</html>

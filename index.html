@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Eatzo</title>
+    <link rel="stylesheet" href="style.css">
+    <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+/>
+
+</head>
+<body>
+    <div id="welcome-overlay">
+    <div class="welcome-card">
+        <h1>WELCOME TO EATZO</h1>
+        <p>Glad to have you here ✨</p>
+    </div>
+</div>
+
+
+
+<header class="header">
+    <div class="header-top">
+        <div class="header-left">
+            <div class="location">
+    📍 <span id="homeAddressShort">Kelambakkam, Chennai</span> ▾
+
+    <div class="location-full" id="homeAddressFull">
+        Vellore Institute of Technology,<br>
+        Kelambakkam , Vandalur Road,<br>
+        Chennai, Tamil Nadu - 600127
+    </div>
+</div>
+            <div class="logo">Eatzo</div>
+        </div>
+
+        <div class="search-box">
+           <input 
+  type="text" 
+  id="searchInput" 
+  placeholder="Search for restaurant or food item"
+  autocomplete="off"
+  autocorrect="off"
+  autocapitalize="off"
+  spellcheck="false"
+>
+        </div>
+
+       <div class="profile">
+    <a href="login.html" class="login-link">Login</a>
+    <a href="Profile/profile.html">
+        <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Profile">
+    </a>
+</div>
+</div>
+
+
+    <!-- OFFERS -->
+    <div class="offers">
+        <div class="offers-track">
+            <div class="offer-pill">Free delivery · Above ₹199</div>
+            <div class="offer-pill">Extra 20% OFF · Eatzo Wallet</div>
+            <div class="offer-pill">Gold exclusive · Unlimited savings</div>
+            <div class="offer-pill">Flat ₹150 OFF · Above ₹499</div>
+            <div class="offer-pill">Buy 1 Get 1 · Selected restaurants</div>
+
+            <!-- duplicate for seamless scroll -->
+            <div class="offer-pill">Free delivery · Above ₹199</div>
+            <div class="offer-pill">Extra 20% OFF · Eatzo Wallet</div>
+            <div class="offer-pill">Gold exclusive · Unlimited savings</div>
+            <div class="offer-pill">Flat ₹150 OFF · Above ₹499</div>
+            <div class="offer-pill">Buy 1 Get 1 · Selected restaurants</div>
+        </div>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filters-modern">
+
+    <div class="filter-chip active" onclick="filterItems('all', event)">☰ Filters</div>
+
+    <div class="filter-chip" onclick="filterItems('fast', event)">⚡ Fast Delivery</div>
+
+    <div class="filter-chip" onclick="filterItems('rating', event)">Rating 4.0+</div>
+
+    <div class="filter-chip" onclick="filterItems('veg', event)">Pure Veg</div>
+
+    <div class="filter-chip" onclick="filterItems('nonveg', event)">Non-Veg</div>
+
+    <div class="filter-chip" onclick="filterItems('price', event)">₹ Under 200</div>
+
+</div>
+    <div class="page-tagline">
+    DISCOVER THE BEST RESTAURANTS, CAFÉS AND FAST FOOD AROUND YOU
+</div>
+
+</header>
+
+<section class="restaurants">
+
+<!-- 1 -->
+<a href="restaurant.html?res=nandhana" class="restaurant-link" onclick="setOrder('Nandhana Palace')" >
+<div class="card" data-type="nonveg" data-rating="4.1" data-price="300" data-search="nandhana palace biryani chicken mutton south indian spicy meals rice biriyani gulab jamun naan paneer">
+    <div class="image">
+        <span>Biryani · ₹300</span>
+        <img src="https://images.pexels.com/photos/1624487/pexels-photo-1624487.jpeg">
+    </div>
+    <h3>Nandhana Palace <span class="rating">★ 4.1</span></h3>
+    <p>30–35 mins · 1.8 km</p>
+    <p class="deal">Flat ₹80 OFF</p>
+</div>
+</a>
+
+<!-- 2 -->
+<a href="restaurant.html?res=fbcakes" class="restaurant-link" onclick="setOrder('FB Cakes')" >
+<div class="card" data-type="veg" data-rating="4.2" data-price="250" data-search="cakes bakery dessert chocolate cake birthday pastry brownie chocolate truffle red velvet black forest blueberry cheesecake cupcakes cupcake">
+    <div class="image">
+        <span>Bakery · ₹250</span>
+        <img src="https://images.pexels.com/photos/291528/pexels-photo-291528.jpeg">
+    </div>
+    <h3>FB Cakes <span class="rating">★ 4.2</span></h3>
+    <p>35–40 mins · 4.6 km</p>
+    <p class="deal">Flat ₹125 OFF</p>
+</div>
+</a>
+
+<!-- 3 -->
+<a href="restaurant.html?res=lapinoz" class="restaurant-link" onclick="setOrder('La Pinoz Pizza')">
+<div class="card" data-type="nonveg" data-rating="4.0" data-price="400" data-search="pizza lapinoz italian cheese veg pizza fast food garlic bread pepperoni margherita farmhouse chicken tikka choco lava cake">
+    <div class="image">
+        <span>Pizza · ₹400</span>
+        <img src="https://images.pexels.com/photos/825661/pexels-photo-825661.jpeg">
+    </div>
+    <h3>La Pino’z Pizza <span class="rating">★ 4.0</span></h3>
+    <p>25–30 mins · 2.2 km</p>
+    <p class="deal">Buy 1 Get 1</p>
+</div>
+</a>
+
+<!-- 4 -->
+<a href="restaurant.html?res=burgerking" class="restaurant-link" onclick="setOrder('Burger King')">
+<div class="card" data-type="nonveg" data-rating="3.9" data-price="200" data-search="burger king burger fries fast food chicken burgers whopper whooper fried chicken cheesy nuggets soft drink cold drink pepsi">
+    <div class="image">
+        <span>Burger · ₹200</span>
+        <img src="https://images.pexels.com/photos/1639562/pexels-photo-1639562.jpeg">
+    </div>
+    <h3>Burger King <span class="rating">★ 3.9</span></h3>
+    <p>20–25 mins · 1.2 km</p>
+    <p class="deal">Flat ₹60 OFF</p>
+</div>
+</a>
+
+<!-- 5 -->
+<a href="restaurant.html?res=udupi" class="restaurant-link" onclick="setOrder('Sri Udupi Park')">
+<div class="card" data-type="nonveg" data-rating="4.5" data-price="150" data-search="udupi south indian dosa idli vada meals vegetarian breakfast filter coffee kesari bath pongal sri">
+    <div class="image">
+        <span>South Indian · ₹150</span>
+        <img src="https://images.pexels.com/photos/5410401/pexels-photo-5410401.jpeg">
+    </div>
+    <h3>Sri Udupi Park <span class="rating">★ 4.5</span></h3>
+    <p>15–20 mins · 0.9 km</p>
+    <p class="deal">20% OFF</p>
+</div>
+</a>
+
+<!-- 6 -->
+<a href="restaurant.html?res=mainland" class="restaurant-link" onclick="setOrder('Mainland China')">
+<div class="card" data-type="nonveg" data-rating="3.7" data-price="280" data-search="mainland china chinese noodles fried rice manchurian asian spring roll veg  chilli chicken hakka sou[]">
+    <div class="image">
+        <span>Chinese · ₹280</span>
+        <img src="https://images.pexels.com/photos/2347311/pexels-photo-2347311.jpeg">
+    </div>
+    <h3>Mainland China <span class="rating">★ 3.7</span></h3>
+    <p>40–45 mins · 5.1 km</p>
+    <p class="deal">Flat ₹100 OFF</p>
+</div>
+</a>
+
+<!-- 7 -->
+<a href="restaurant.html?res=kfc" class="restaurant-link" onclick="setOrder('KFC')">
+<div class="card" data-type="nonveg" data-rating="4.0" data-price="350" data-search="kfc chicken burger fried chicken fast food burgers pepsi cold drink soft drinks KFC wings popcorn fries brownie">
+    <div class="image">
+        <span>Chicken · ₹350</span>
+        <img src="https://tse4.mm.bing.net/th/id/OIP.SjQTtmaYRhmXFXb1qi_oaQHaFa?pid=Api&P=0&h=180">
+    </div>
+    <h3>KFC <span class="rating">★ 4.0</span></h3>
+    <p>30–35 mins · 3.0 km</p>
+    <p class="deal">Flat ₹90 OFF</p>
+</div>
+</a>
+
+<!-- 8 -->
+<a href="restaurant.html?res=sweettruth" class="restaurant-link"  onclick="setOrder('Sweet Truth')">
+<div class="card" data-type="veg" data-rating="4.4" data-price="220" data-search="cakes dessert sweet truth brownies pastry cake red velvet jar brownie cheesecake choco lava chocolate cupcake tiramisu cupcakes cookie box">
+    <div class="image">
+        <span>Desserts · ₹220</span>
+        <img src="https://images.pexels.com/photos/3026804/pexels-photo-3026804.jpeg">
+    </div>
+    <h3>Sweet Truth <span class="rating">★ 4.4</span></h3>
+    <p>20–25 mins · 1.5 km</p>
+    <p class="deal">Free Dessert</p>
+</div>
+</a>
+
+<!-- 9 -->
+<a href="restaurant.html?res=ccd" class="restaurant-link" onclick="setOrder('Cafe Coffee Day')">
+<div class="card" data-type="veg" data-rating="3.8" data-price="180" data-search="cafe coffee day coffee cafe beverages snacks sandwich cold coffee Cappuccino cappuccino latte Latte sandwiches garlic bread chocolate shake">
+    <div class="image">
+        <span>Cafe · ₹180</span>
+        <img src="https://images.pexels.com/photos/302899/pexels-photo-302899.jpeg">
+    </div>
+    <h3>Cafe Coffee Day <span class="rating">★ 3.8</span></h3>
+    <p>25–30 mins · 2.9 km</p>
+    <p class="deal">Flat ₹50 OFF</p>
+</div>
+</a>
+
+<!-- 10 -->
+<a href="restaurant.html?res=subway" class="restaurant-link" onclick="setOrder('Subway')">
+<div class="card" data-type="nonveg" data-rating="3.9" data-price="200" data-search="subway sandwich sub burger healthy fast food veg nonveg cold drink cookies veggie paneer tikka chicken teriyaki aloo patty Patty tuna Tuna cookie cookies soft drink pepsi cola coke ">
+    <div class="image">
+        <span>Sandwich · ₹200</span>
+        <img src="https://tse2.mm.bing.net/th/id/OIP.5EhnGT8H6pt7t9uA2FfblwHaEO?pid=Api&P=0&h=180">
+    </div>
+    <h3>Subway <span class="rating">★ 3.9</span></h3>
+    <p>20–25 mins · 1.7 km</p>
+    <p class="deal">Buy 2 Get 1</p>
+</div>
+</a>
+
+</section>
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-col brand">
+            <h2>EATZO</h2>
+            <p>Discover the best restaurants, cafés, and fast food around you.</p>
+        </div>
+
+        <div class="footer-col">
+            <h4>About Eatzo</h4>
+            <a href="#">About Us</a>
+            <a href="#">Careers</a>
+            <a href="#">Team</a>
+            <a href="#">Contact</a>
+        </div>
+
+        <div class="footer-col">
+            <h4>For Restaurants</h4>
+            <a href="#">Partner With Us</a>
+            <a href="#">Restaurant Dashboard</a>
+            <a href="#">Promotions</a>
+        </div>
+
+        <div class="footer-col">
+            <h4>Support</h4>
+            <a href="#">Help Center</a>
+            <a href="#">Terms & Conditions</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Refund Policy</a>
+        </div>
+
+        <div class="footer-col">
+    <h4>Connect</h4>
+    <div class="social-links icons">
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+    </div>
+</div>
+
+    </div>
+
+    <div class="footer-bottom">
+        <p>© 2026 Eatzo. All rights reserved.</p>
+    </div>
+</footer>
+<script>
+    const username = localStorage.getItem("username");
+
+    if (username) {
+        const loginText = document.getElementById("loginText");
+        loginText.innerText = username;
+        loginText.href = "profile.html";
+    }
+</script>
+<script>
+    const showWelcome = localStorage.getItem("showWelcome");
+
+    if (showWelcome === "true") {
+        const overlay = document.getElementById("welcome-overlay");
+        overlay.style.display = "flex";
+
+        setTimeout(() => {
+            overlay.style.display = "none";
+            localStorage.removeItem("showWelcome");
+        }, 2200);
+    }
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+    const saved = localStorage.getItem("deliveryAddress");
+
+    if (!saved) {
+        // Save default homepage address
+        const fullAddress = document.getElementById("fullAddress").innerText;
+        localStorage.setItem("deliveryAddress", fullAddress);
+    } else {
+        // If already saved, update homepage display
+        document.getElementById("fullAddress").innerText = saved;
+        document.getElementById("shortAddress").innerText =
+            saved.split(",")[0];  // first part only for top display
+    }
+
+});
+
+
+
+
+
+if (!localStorage.getItem("deliveryAddress")) {
+    localStorage.setItem(
+        "deliveryAddress",
+        "Vellore Institute of Technology, Kelambakkam – Vandalur Road, Chennai, Tamil Nadu - 600127"
+    );
+}
+
+const address = localStorage.getItem("deliveryAddress");
+
+if (address) {
+
+    // Full hover version
+    document.getElementById("homeAddressFull").innerText = address;
+
+    // Only 2 words for header
+    const words = address.replace(/,/g, "").split(" ");
+    const shortAddress = words.slice(0, 2).join(" ");
+
+    document.getElementById("homeAddressShort").innerText = shortAddress;
+}
+</script>
+<script>
+function filterItems(type, event){
+
+    const cards = document.querySelectorAll(".card");
+
+    cards.forEach(card => {
+
+        const itemType = card.getAttribute("data-type");
+        const rating = parseFloat(card.getAttribute("data-rating"));
+
+        let show = true;
+
+        if(type === "veg"){
+            show = itemType === "veg";
+        }
+        else if(type === "price"){
+    const price = parseInt(card.getAttribute("data-price"));
+    show = price <= 200;
+}
+        else if(type === "nonveg"){
+            show = itemType === "nonveg";
+        }
+
+        else if(type === "rating"){
+            show = rating >= 4.0;
+        }
+
+        else if(type === "all"){
+            show = true;
+        }
+
+        // (optional placeholder filters)
+        else if(type === "fast"){
+            show = true; // you can improve later
+        }
+
+        else if(type === "price"){
+            show = true; // can be added later
+        }
+
+        // SHOW / HIDE
+        card.parentElement.style.display = show ? "block" : "none";
+    });
+
+    // 🔥 ACTIVE BUTTON UI
+    document.querySelectorAll(".filter-chip").forEach(btn=>{
+        btn.classList.remove("active");
+    });
+
+    event.currentTarget.classList.add("active");
+}
+
+const searchInput = document.getElementById("searchInput");
+
+searchInput.addEventListener("keyup", function(){
+
+    const query = searchInput.value.toLowerCase().trim();
+    
+
+    const cards = document.querySelectorAll(".card");
+
+    cards.forEach(card => {
+
+        const keywords = card.getAttribute("data-search");
+
+        // if search is empty → show all
+        if(query === ""){
+            card.parentElement.style.display = "block";
+            return;
+        }
+
+        // check match
+        if(keywords.includes(query)){
+            card.parentElement.style.display = "block";
+        } else {
+            card.parentElement.style.display = "none";
+        }
+
+    });
+
+});
+
+function setOrder(name){
+    localStorage.setItem("currentOrder", name);
+}
+
+</script>
+</body>
+</html>

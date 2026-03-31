@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Select Address</title>
+
+<style>
+
+body{
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
+background:#f5f6f8;
+margin:0;
+padding:30px;
+color:#1c1c1c;
+}
+
+/* SECTION TITLE */
+
+.section-title{
+font-size:13px;
+letter-spacing:1px;
+color:#8c8c8c;
+font-weight:600;
+margin-bottom:14px;
+}
+
+/* ADDRESS CONTAINER */
+
+.address-container{
+background:white;
+border-radius:16px;
+overflow:hidden;
+box-shadow:0 4px 14px rgba(0,0,0,0.06);
+}
+
+/* ADDRESS CARD */
+
+.address-card{
+display:flex;
+align-items:flex-start;
+justify-content:space-between;
+padding:18px;
+border-bottom:1px solid #eee;
+cursor:pointer;
+transition:0.2s;
+}
+
+.address-card:last-child{
+border-bottom:none;
+}
+
+.address-card.active{
+background:#eaf6ee;
+}
+
+/* LEFT SIDE */
+
+.address-left{
+display:flex;
+gap:12px;
+}
+
+.icon-box{
+width:42px;
+height:42px;
+border-radius:10px;
+background:#f3f3f3;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:20px;
+}
+
+/* TEXT */
+
+.address-text{
+max-width:520px;
+}
+
+.address-type{
+font-size:13px;
+font-weight:700;
+margin-bottom:6px;
+}
+
+.address-desc{
+font-size:14px;
+color:#555;
+line-height:1.5;
+}
+
+.receiver{
+font-size:13px;
+color:#777;
+margin-top:6px;
+}
+
+/* RADIO SELECT */
+
+.select-circle{
+width:20px;
+height:20px;
+border-radius:50%;
+border:2px solid #ccc;
+margin-top:6px;
+}
+
+.address-card.active .select-circle{
+border-color:#22c55e;
+background:#22c55e;
+}
+
+/* DELIVER BUTTON */
+
+.deliver-btn{
+margin-top:22px;
+width:100%;
+height:52px;
+border:none;
+border-radius:12px;
+background:#22c55e;
+color:white;
+font-size:17px;
+font-weight:600;
+cursor:pointer;
+box-shadow:0 6px 14px rgba(0,0,0,0.1);
+}
+
+/* ADD NEW ADDRESS */
+
+.add-address{
+margin-top:26px;
+background:white;
+padding:18px;
+border-radius:14px;
+display:flex;
+align-items:center;
+gap:14px;
+cursor:pointer;
+box-shadow:0 3px 12px rgba(0,0,0,0.05);
+}
+
+.add-icon{
+width:40px;
+height:40px;
+border-radius:10px;
+background:#ffe8e8;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:22px;
+color:#e23744;
+}
+
+.add-text{
+font-size:15px;
+color:#e23744;
+font-weight:600;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="section-title">SAVED ADDRESSES</div>
+
+<div class="address-container">
+
+<div class="address-card active"
+onclick="selectAddress(this,'HOME','VIT Chennai, Kelambakkam Vandalur Road - 600127')">
+
+<div class="address-left">
+
+<div class="icon-box">🏠</div>
+
+<div class="address-text">
+<div class="address-type">HOME</div>
+<div class="address-desc">
+VIT Chennai, Kelambakkam – Vandalur Road, Chennai – 600127
+</div>
+</div>
+
+</div>
+
+<div class="select-circle"></div>
+
+</div>
+
+
+<div class="address-card"
+onclick="selectAddress(this,'WORK','IT Park, OMR Road, Chennai - 600096')">
+
+<div class="address-left">
+
+<div class="icon-box">💼</div>
+
+<div class="address-text">
+<div class="address-type">WORK</div>
+<div class="address-desc">
+IT Park, OMR Road, Chennai - 600096
+</div>
+</div>
+
+</div>
+
+<div class="select-circle"></div>
+
+</div>
+
+
+<div class="address-card"
+onclick="selectAddress(this,'OTHER','Anna Nagar West, Chennai - 600040')">
+
+<div class="address-left">
+
+<div class="icon-box">📍</div>
+
+<div class="address-text">
+<div class="address-type">OTHER</div>
+<div class="address-desc">
+Anna Nagar West, Chennai - 600040
+</div>
+
+<div class="receiver">
+👤 Unnati · 📞 7814344901
+</div>
+
+</div>
+
+</div>
+
+<div class="select-circle"></div>
+
+</div>
+
+</div>
+
+
+<button class="deliver-btn" onclick="deliverHere()">
+Deliver Here
+</button>
+
+
+<div class="section-title">ADD NEW ADDRESS</div>
+
+<div class="add-address" onclick="openForm()">
+<div class="add-icon">+</div>
+<div class="add-text">Add a new delivery address</div>
+</div>
+
+
+<script>
+
+let selectedType = "HOME"
+let selectedAddress = "VIT Chennai, Kelambakkam Vandalur Road - 600127"
+
+function selectAddress(card,type,address){
+
+document.querySelectorAll(".address-card")
+.forEach(c=>c.classList.remove("active"))
+
+card.classList.add("active")
+
+selectedType = type
+selectedAddress = address
+
+}
+
+function deliverHere(){
+
+localStorage.setItem("addressType",selectedType)
+localStorage.setItem("deliveryAddress",selectedAddress)
+
+window.location.href="../cart.html"
+
+}
+
+function openForm(){
+window.location.href="address.html"
+}
+
+</script>
+
+</body>
+</html>

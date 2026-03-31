@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Restaurant</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="profile-topbar">
+  <a href="index.html" class="back-btn">←</a>
+  <span id="restaurant-name">Restaurant</span>
+</div>
+<button id="viewCartBtn" onclick="openCartPage()">
+    View Cart (<span id="cartCount">0</span>)
+</button>
+
+<div class="restaurants" id="menu-container"></div>
+
+<!-- ⚠️ ORDER MATTERS -->
+<script src="menus.js"></script>
+<script src="script.js"></script>
+
+<!-- CUSTOMIZATION DRAWER -->
+<div id="customDrawer" class="custom-drawer">
+  <div class="drawer-content">
+
+    <div class="drawer-header">
+      <h3 id="drawerTitle">Item</h3>
+      <button onclick="closeDrawer()">✕</button>
+    </div>
+
+    <div id="drawerOptions"></div>
+
+    <div class="drawer-footer">
+      <div class="drawer-qty">
+        <button onclick="changeDrawerQty(-1)">−</button>
+        <span id="drawerQty">1</span>
+        <button onclick="changeDrawerQty(1)">+</button>
+      </div>
+      <button id="drawerAddBtn" onclick="confirmAddToCart()">
+    Add item
+</button>
+</div>
+<!-- Floating Cart Button -->
+<a href="cart.html" class="floating-cart">
+    🛒 <span id="cart-count">0</span>
+</a>
+
+</body>
+</html>

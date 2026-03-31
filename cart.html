@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Your Cart</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<style>
+
+body{
+margin:0;
+font-family: Inter, Arial, sans-serif;
+background:#f5f6f8;
+}
+
+/* HEADER */
+.cart-header{
+display:flex;
+align-items:center;
+gap:14px;
+padding:16px 20px;
+background:white;
+font-size:18px;
+font-weight:600;
+box-shadow:0 2px 8px rgba(0,0,0,0.04);
+}
+.back-btn{
+text-decoration:none;
+color:black;
+font-size:22px;
+}
+/* PAGE WRAPPER */
+.page-wrapper{
+max-width:760px;
+margin:auto;
+padding:20px;
+}
+/* CART BOX */
+.cart-items-box{
+background:white;
+border-radius:18px;
+box-shadow:0 3px 12px rgba(0,0,0,0.06);
+margin-bottom:18px;
+}
+/* CART ITEM */
+.cart-item{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+padding:18px 20px;
+border-bottom:1px solid #f0f0f0;
+}
+.cart-item:last-child{
+border-bottom:none;
+}
+/* LEFT SIDE */
+.cart-title-row{
+display:flex;
+gap:10px;
+align-items:flex-start;
+}
+.cart-text h4{
+margin:0;
+font-size:16px;
+font-weight:600;
+}
+.cart-edit{
+font-size:13px;
+color:#e23744;
+margin-top:4px;
+cursor:pointer;
+}
+/* VEG NONVEG */
+.food-dot{
+width:16px;
+height:16px;
+border-radius:3px;
+border:2px solid;
+position:relative;
+margin-top:3px;
+}
+.food-dot::after{
+content:"";
+position:absolute;
+top:2px;
+left:3px;
+width:0;
+height:0;
+border-left:4px solid transparent;
+border-right:4px solid transparent;
+border-bottom:7px solid;
+}
+.food-dot.veg{
+border-color:#16a34a;
+}
+.food-dot.veg::after{
+border-bottom-color:#16a34a;
+}
+.food-dot.nonveg{
+border-color:#e23744;
+}
+.food-dot.nonveg::after{
+border-bottom-color:#e23744;
+}
+/* RIGHT SIDE */
+.cart-right{
+display:flex;
+flex-direction:column;
+align-items:flex-end;
+gap:6px;
+}
+/* QUANTITY */
+.cart-qty{
+display:flex;
+align-items:center;
+gap:14px;
+border:2px solid #e23744;
+padding:4px 16px;
+border-radius:10px;
+font-weight:600;
+}
+.cart-qty button{
+border:none;
+background:none;
+font-size:18px;
+color:#e23744;
+cursor:pointer;
+}
+/* PRICE */
+.cart-price{
+font-weight:600;
+font-size:15px;
+}
+/* ADD MORE */
+.add-more-items{
+margin-top:14px;
+color:#e23744;
+font-weight:600;
+cursor:pointer;
+}
+/* EMPTY CART */
+.empty-cart{
+text-align:center;
+margin-top:60px;
+font-size:18px;
+color:#777;
+}
+/* CHECKOUT */
+.checkout-btn{
+margin-top:20px;
+width:100%;
+height:48px;
+background:#e23744;
+color:white;
+border:none;
+border-radius:12px;
+font-weight:600;
+font-size:15px;
+cursor:pointer;
+}
+.checkout-btn:hover{
+background:#c81f33;
+}
+/* DELIVERY */
+.delivery-wrapper{
+margin-top:30px;
+}
+.delivery-heading{
+font-size:13px;
+letter-spacing:1px;
+color:#8b8f94;
+font-weight:600;
+margin-bottom:12px;
+}
+.delivery-card{
+background:white;
+border-radius:18px;
+padding:20px;
+box-shadow:0 3px 12px rgba(0,0,0,0.05);
+}
+.address-type{
+display:inline-block;
+background:#e8f5ec;
+color:#1c8f45;
+font-size:12px;
+font-weight:600;
+padding:6px 12px;
+border-radius:20px;
+margin-bottom:10px;
+}
+.address-text{
+font-size:14px;
+color:#444;
+line-height:1.4;
+margin-bottom:16px;
+}
+.address-actions{
+display:flex;
+gap:12px;
+margin-bottom:15px;
+}
+.change-address-btn{
+flex:1;
+background:#1c8f45;
+color:white;
+border:none;
+padding:12px;
+border-radius:12px;
+font-weight:600;
+cursor:pointer;
+}
+.add-address-btn{
+flex:1;
+background:#ececec;
+border:none;
+padding:12px;
+border-radius:12px;
+font-weight:600;
+cursor:pointer;
+}
+.delivery-time{
+background:#fff3e0;
+padding:12px 14px;
+border-radius:12px;
+font-size:14px;
+}
+.free-delivery{
+color:#1c8f45;
+font-weight:600;
+}
+/* SUGGESTIONS */
+.suggestions-section{
+margin-top:30px;
+}
+.suggestions-section h3{
+font-size:13px;
+letter-spacing:1px;
+color:#8b8f94;
+font-weight:600;
+margin-bottom:12px;
+}
+.suggestions-list{
+display:flex;
+gap:14px;
+overflow-x:auto;
+padding-bottom:6px;
+}
+.suggestions-list::-webkit-scrollbar{
+display:none;
+}
+.suggestion-card{
+min-width:130px;
+background:white;
+border-radius:14px;
+padding:6px;
+box-shadow:0 3px 8px rgba(0,0,0,0.06);
+}
+.suggestion-image{
+position:relative;
+}
+.suggestion-image img{
+width:100%;
+height:80px;
+object-fit:cover;
+border-radius:10px;
+}
+.suggestion-image button{
+position:absolute;
+bottom:6px;
+right:6px;
+width:26px;
+height:26px;
+border-radius:50%;
+border:none;
+background:#e23744;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+.suggestion-info{
+font-size:13px;
+text-align:center;
+margin-top:4px;
+}
+/* COUPON SECTION */
+.coupon-wrapper{
+margin:28px 0;
+}
+.coupon-heading{
+font-size:14px;
+letter-spacing:1px;
+color:#8c8c8c;
+margin-bottom:10px;
+}
+.coupon-card{
+background:#fff;
+border-radius:16px;
+padding:16px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+cursor:pointer;
+box-shadow:0 3px 10px rgba(0,0,0,0.05);
+transition:0.2s;
+}
+.coupon-card:hover{
+transform:translateY(-2px);
+}
+.coupon-left{
+display:flex;
+align-items:center;
+gap:12px;
+}
+.coupon-icon{
+width:38px;
+height:38px;
+border-radius:10px;
+background:#ffe9d9;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:18px;
+}
+.coupon-title{
+font-size:15px;
+font-weight:600;
+}
+.coupon-subtitle{
+font-size:13px;
+color:#777;
+}
+.coupon-arrow{
+font-size:22px;
+color:#aaa;
+}
+.coupon-section{
+margin-top:25px;
+margin-bottom:10px;
+font-size:16px;
+color:#555;
+}
+.coupon-applied-box{
+background:#e7f3ec;
+border:1px solid #bfe3cc;
+padding:16px 18px;
+border-radius:12px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:12px;
+}
+.coupon-applied-left{
+display:flex;
+flex-direction:column;
+}
+.coupon-applied-title{
+color:#1c8f45;
+font-weight:600;
+font-size:16px;
+}
+.coupon-applied-discount{
+font-size:14px;
+margin-top:3px;
+color:#222;
+}
+.remove-coupon{
+color:#e23744;
+font-size:14px;
+font-weight:600;
+cursor:pointer;
+}
+/* BILL SUMMARY */
+
+.bill-wrapper{
+margin-top:28px;
+}
+
+.bill-heading{
+font-size:13px;
+letter-spacing:1px;
+color:#8b8f94;
+font-weight:600;
+margin-bottom:12px;
+}
+
+.bill-card{
+background:white;
+border-radius:18px;
+box-shadow:0 3px 12px rgba(0,0,0,0.05);
+overflow:hidden;
+}
+
+.bill-row{
+display:flex;
+justify-content:space-between;
+padding:14px 18px;
+font-size:14px;
+border-bottom:1px solid #f0f0f0;
+}
+
+.bill-row:last-child{
+border-bottom:none;
+}
+
+.grand-total{
+font-weight:700;
+font-size:16px;
+}
+
+.grand-total span:last-child{
+color:#e23744;
+}
+
+.savings-box{
+margin-top:12px;
+background:#e7f3ec;
+border:1px solid #bfe3cc;
+color:#1c8f45;
+padding:14px 18px;
+border-radius:14px;
+font-weight:600;
+}
+/* BOTTOM PAY BAR */
+
+.paybar{
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+background:#fff;
+box-shadow:0 -2px 10px rgba(0,0,0,0.08);
+padding:14px 18px;
+display:flex;
+justify-content:center;
+z-index:999;
+}
+
+.paybar-inner{
+width:100%;
+max-width:760px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.pay-total{
+display:flex;
+flex-direction:column;
+}
+
+.pay-label{
+font-size:12px;
+color:#777;
+}
+
+.pay-amount{
+font-size:20px;
+font-weight:700;
+}
+
+.pay-btn{
+background:#e23744;
+color:#fff;
+border:none;
+padding:14px 26px;
+border-radius:14px;
+font-weight:600;
+font-size:15px;
+cursor:pointer;
+display:flex;
+align-items:center;
+gap:6px;
+transition:transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+/* hover animation */
+.pay-btn:hover{
+transform:scale(1.06);
+box-shadow:0 6px 16px rgba(226,55,68,0.35);
+}
+
+.page-wrapper{
+max-width:760px;
+margin:auto;
+padding:20px;
+padding-bottom:90px;
+}
+
+/* COUPON APPLY CARD */
+</style>
+</head>
+<body>
+<div class="cart-header">
+<a href="#" class="back-btn" onclick="goToMenu()">←</a>
+Your Cart
+</div>
+<div class="page-wrapper">
+<div class="cart-container" id="cartItems"></div>
+</div>
+<script src="menus.js"></script>
+<script>
+/* YOUR ORIGINAL JS — UNCHANGED */
+
+function loadCart(){
+const cart=JSON.parse(localStorage.getItem("cartItems"))||[];
+const container=document.getElementById("cartItems");
+if(cart.length===0){
+container.innerHTML="<div class='empty-cart'>Your cart is empty.</div>";
+return;
+}
+let total=0;
+container.innerHTML="";
+container.innerHTML=`<div class="cart-items-box">`;
+cart.forEach((item,index)=>{
+total+=item.price;
+container.innerHTML+=`
+<div class="cart-item">
+<div class="cart-left">
+<div class="cart-title-row">
+<span class="food-dot ${item.type==="Veg"?"veg":"nonveg"}"></span>
+<div class="cart-text">
+<h4>${item.name}</h4>
+<div class="cart-edit" onclick="editItem(${index})">Edit ▸</div>
+</div>
+</div>
+</div>
+<div class="cart-right">
+<div class="cart-qty">
+<button onclick="changeCartQty(${index},-1)">−</button>
+<span>${item.qty}</span>
+<button onclick="changeCartQty(${index},1)">+</button>
+</div>
+<div class="cart-price">₹${item.price}</div>
+</div>
+</div>
+`;
+});
+container.innerHTML += `</div>`;
+
+/* BILL CALCULATION */
+
+const itemTotal = total;
+const tax = Math.round(itemTotal * 0.05);
+const deliveryFee = 40;
+
+const discount = Number(localStorage.getItem("couponDiscount") || 0);
+
+const grandTotal = itemTotal + tax + deliveryFee - discount;
+
+container.innerHTML+=`
+<div class="add-more-items">
+<span onclick="goToMenu()">Add more items +</span>
+</div>
+`;
+loadSuggestions();
+container.innerHTML+=`
+<div class="coupon-wrapper">
+<h3 class="coupon-heading">OFFERS & COUPONS</h3>
+<div class="coupon-card" onclick="openCouponPage()">
+<div class="coupon-left">
+<div class="coupon-icon">🏷️</div>
+<div>
+<div class="coupon-title">Apply a coupon</div>
+<div class="coupon-subtitle">Save more on your order</div>
+</div>
+</div>
+<div class="coupon-arrow">›</div>
+</div>
+</div>
+`;
+const appliedCoupon = localStorage.getItem("appliedCoupon");
+const couponDiscount = localStorage.getItem("couponDiscount");
+
+if(appliedCoupon){
+container.innerHTML += `
+<div class="coupon-applied-box">
+<div class="coupon-left">
+<div class="coupon-success">
+✓ ${appliedCoupon} Applied
+</div>
+<div class="coupon-discount">
+Discount −₹${couponDiscount}
+</div>
+</div>
+<div class="remove-coupon" onclick="removeCoupon()">
+Remove
+</div>
+</div>
+`;
+}
+/* DELIVERY */
+container.innerHTML+=`
+<div class="delivery-wrapper">
+<h3 class="delivery-heading">DELIVERY DETAILS</h3>
+<div class="delivery-card">
+<div class="address-type">
+📍<span id="addressType">HOME</span>
+</div>
+<p id="savedAddress" class="address-text">
+VIT Chennai, Kelambakkam Vandalur Road - 600127
+</p>
+<div class="address-actions">
+<button class="change-address-btn" onclick="openSavedAddresses()">
+Change Address
+</button>
+<button class="add-address-btn" onclick="openAddressPage()">
+Add New
+</button>
+</div>
+<div class="delivery-time">
+⚡ Estimated delivery: <b>30–40 mins</b> · 
+<span class="free-delivery">Free delivery</span>
+</div>
+</div>
+</div>
+`;
+loadSavedAddress();
+container.innerHTML += `
+<div class="bill-wrapper">
+
+<h3 class="bill-heading">BILL SUMMARY</h3>
+
+<div class="bill-card">
+
+<div class="bill-row">
+<span>Item total</span>
+<span>₹${itemTotal}</span>
+</div>
+
+<div class="bill-row">
+<span>Delivery fee</span>
+<span>+₹${deliveryFee}</span>
+</div>
+
+<div class="bill-row">
+<span>Taxes & charges (5%)</span>
+<span>+₹${tax}</span>
+</div>
+
+<div class="bill-row">
+<span>Coupon discount</span>
+<span style="color:#1c8f45">−₹${discount}</span>
+</div>
+
+<div class="bill-divider"></div>
+
+
+
+</div>
+
+</div>
+
+
+`;
+if(discount > 0){
+container.innerHTML += `
+<div class="savings-box">
+🎉 You're saving ₹${discount} on this order!
+</div>
+`;
+}
+/* Checkout button */
+container.innerHTML += `
+<div class="paybar">
+
+<div class="paybar-inner">
+
+<div class="pay-total">
+<span class="pay-label">Total payable</span>
+<span class="pay-amount">₹${grandTotal}</span>
+</div>
+
+<button class="pay-btn" onclick="goToPayment()">
+Proceed to Pay →
+</button>
+
+</div>
+
+</div>
+`;
+/* Load saved address */
+}
+function changeCartQty(index, change) {
+
+    let cart = JSON.parse(localStorage.getItem("cartItems")) || [];
+    if (!cart[index]) return;
+
+    const unitPrice = cart[index].price / cart[index].qty;
+
+    cart[index].qty += change;
+
+    if (cart[index].qty < 1) {
+        cart.splice(index, 1);
+    } else {
+        cart[index].price = unitPrice * cart[index].qty;
+    }
+
+    localStorage.setItem("cartItems", JSON.stringify(cart));
+    loadCart();
+}
+loadCart();
+function loadSuggestions() {
+
+    const resKey = localStorage.getItem("currentRestaurant");
+
+    if (!resKey || !menus[resKey]) return;
+
+    const menuItems = menus[resKey].items;
+
+    const container = document.getElementById("cartItems");
+
+    let suggestionHTML = `
+    <div class="suggestions-section">
+        <h3>You might also like</h3>
+        <div class="suggestions-list">
+    `;
+
+    menuItems.slice(0,4).forEach((item,index)=>{
+
+        suggestionHTML += `
+        <div class="suggestion-card">
+
+    <div class="suggestion-image">
+        <img src="${item.image}">
+        <button onclick="addSuggestion(${index})">+</button>
+    </div>
+
+    <div class="suggestion-info">
+        <span>${item.name}</span>
+    </div>
+
+</div>
+        `;
+    });
+
+    suggestionHTML += `
+        </div>
+    </div>
+    `;
+
+    container.innerHTML += suggestionHTML;
+    if(localStorage.getItem("showConfetti") === "true"){
+
+launchConfetti();
+
+localStorage.removeItem("showConfetti");
+
+}
+}
+function addSuggestion(index){
+const resKey = localStorage.getItem("currentRestaurant");
+const item = menus[resKey].items[index];
+let cart = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+/* Check if item already exists */
+let existingItem = cart.find(cartItem => cartItem.name === item.name);
+if(existingItem){
+/* Increase quantity */
+existingItem.qty += 1;
+existingItem.price = existingItem.qty * (item.price);
+}else{
+/* Add new item */
+cart.push({
+name: item.name,
+price: item.price,
+qty: 1,
+type: item.type,
+menuIndex:index
+});
+}
+localStorage.setItem("cartItems", JSON.stringify(cart));
+
+loadCart();
+
+}
+function loadSavedAddress(){
+
+    const address = localStorage.getItem("deliveryAddress");
+    const type = localStorage.getItem("addressType");
+
+    if(address){
+        document.getElementById("savedAddress").innerText = address;
+    }
+
+    if(type){
+        document.getElementById("addressType").innerText = type.toUpperCase();
+    }
+}
+function editAddress() {
+    document.getElementById("addressForm").style.display = "block";
+}
+
+function saveAddress(){
+
+    const address = document.getElementById("addressInput").value;
+    const name = document.getElementById("receiverName")?.value || "";
+    const phone = document.getElementById("receiverPhone")?.value || "";
+
+    localStorage.setItem("deliveryAddress", address);
+    localStorage.setItem("receiverName", name);
+    localStorage.setItem("receiverPhone", phone);
+
+    window.location.href = "cart.html";
+}
+function openAddressPage() {
+    window.location.href = "ADDRESS/address.html";
+}
+function goToMenu() {
+
+    const resKey = localStorage.getItem("currentRestaurant");
+
+    if (resKey) {
+        window.location.href = "restaurant.html?res=" + resKey;
+    } else {
+        window.location.href = "index.html";
+    }
+}
+function editItem(index) {
+
+    const cart = JSON.parse(localStorage.getItem("cartItems")) || [];
+    const item = cart[index];
+
+    if (!item) return;
+
+    // 🔥 Save the original menu index (not cart index)
+    localStorage.setItem("editMenuIndex", item.menuIndex);
+
+    const resKey = localStorage.getItem("currentRestaurant");
+    window.location.href = "restaurant.html?res=" + resKey;
+}
+function openSavedAddresses(){
+window.location.href = "ADDRESS/saved_address.html";
+}
+function openCouponPage(){
+window.location.href = "coupons.html";
+}
+function removeCoupon(){
+
+localStorage.removeItem("appliedCoupon");
+localStorage.removeItem("couponDiscount");
+
+loadCart();
+
+}
+function goToPayment(){
+window.location.href="payment.html";
+}
+function launchConfetti(){
+
+// BIG explosion in center
+confetti({
+particleCount: 120,
+spread: 90,
+startVelocity: 40,
+origin: { y: 0.6 },
+scalar: 1.6,   // makes confetti bigger
+colors: ['#ff4d4f','#ff9f43','#ffd93d','#6bcB77','#4d96ff','#c77dff']
+});
+
+// rain effect for 2 seconds
+const duration = 500;
+const end = Date.now() + duration;
+
+(function frame() {
+
+confetti({
+particleCount: 6,
+angle: 60,
+spread: 60,
+origin: { x: 0 },
+scalar: 1.3
+});
+
+confetti({
+particleCount: 6,
+angle: 120,
+spread: 60,
+origin: { x: 1 },
+scalar: 1.3
+});
+
+if (Date.now() < end) {
+requestAnimationFrame(frame);
+}
+
+}());
+
+}
+
+
+</script>
+</body>
+</html>

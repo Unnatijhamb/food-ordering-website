@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Delivery Address</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f4f5f7;
+}
+
+/* Center container */
+.address-container {
+    max-width: 520px;
+    margin: 60px auto;
+    padding: 20px;
+}
+
+/* Card */
+.address-card {
+    background: white;
+    padding: 30px;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* Header with back button */
+.address-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.back-btn {
+    background: #f0f0f0;
+    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.back-btn:hover {
+    background: #e2e2e2;
+}
+
+.address-card h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+/* Form fields */
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1.5px solid #ddd;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #16a34a;
+    box-shadow: 0 0 0 3px rgba(22,163,74,0.15);
+}
+
+/* Save button */
+.save-address-btn {
+    margin-top: 15px;
+    width: 100%;
+    height: 48px;
+    background: #16a34a;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.save-address-btn:hover {
+    background: #15803d;
+    transform: translateY(-1px);
+}
+
+.save-address-btn:active {
+    transform: translateY(0);
+}
+.address-type-options {
+    display: flex;
+    gap: 10px;
+}
+
+.address-pill{
+    padding:8px 14px;
+    border-radius:20px;
+    border:1px solid #ccc;
+    background:#fff;
+    cursor:pointer;
+}
+
+.active-address-pill{
+    background:#e6f4ea;
+    border-color:#1c8f45;
+    color:#1c8f45;
+    font-weight:600;
+}
+
+.address-pill:hover {
+    background: #e8e8e8;
+}
+.receiver-fields{
+display:none;
+margin-top:16px;
+}
+
+.receiver-fields label{
+display:block;
+margin-top:12px;
+font-size:14px;
+font-weight:500;
+}
+
+.receiver-fields input{
+width:100%;
+padding:12px;
+margin-top:6px;
+border-radius:10px;
+border:1px solid #ddd;
+font-size:14px;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div class="address-container">
+    <div class="address-card">
+
+        <div class="address-header">
+            <button class="back-btn" onclick="goToCart()">←</button>
+            <h2>Delivery Address</h2>
+        </div>
+
+        <div class="form-group">
+            <label>Flat / House No.</label>
+            <input type="text" id="flat">
+        </div>
+
+        <div class="form-group">
+            <label>Area / Locality</label>
+            <input type="text" id="area">
+        </div>
+
+        <div class="form-group">
+            <label>Landmark</label>
+            <input type="text" id="landmark">
+        </div>
+
+        <div class="form-group">
+            <label>City</label>
+            <input type="text" id="city">
+        </div>
+
+        <div class="form-group">
+            <label>State</label>
+            <input type="text" id="state">
+        </div>
+
+        <div class="form-group">
+            <label>Pincode</label>
+            <input type="text" id="pincode">
+        </div>
+        <div class="form-group">
+    
+
+    <div class="address-type-options">
+        <button type="button" class="address-pill" onclick="selectAddressType('Home')" id="typeHome">Home</button>
+        <button type="button" class="address-pill" onclick="selectAddressType('Work')" id="typeWork">Work</button>
+        <button type="button" class="address-pill" onclick="selectAddressType('Other')" id="typeOther">Other</button>
+    </div>
+    <div id="receiverFields" class="receiver-fields">
+    <label>Receiver's Name</label>
+    <input type="text" id="receiverName" placeholder="Enter receiver name">
+
+    <label>Receiver's Mobile Number</label>
+    <input type="tel" id="receiverPhone" placeholder="Enter mobile number">
+</div>
+
+</div>
+</div>
+
+        <button type="button" onclick="saveAddress()" class="save-address-btn">
+Save Address
+</button>
+    </div>
+</div>
+
+<script>
+    let selectedType = "Home";
+function saveAddress() {
+
+    const flat = document.getElementById("flat").value;
+    const area = document.getElementById("area").value;
+    const landmark = document.getElementById("landmark").value;
+    const city = document.getElementById("city").value;
+    const state = document.getElementById("state").value;
+    const pincode = document.getElementById("pincode").value;
+
+    const fullAddress =
+        flat + ", " +
+        area + ", " +
+        landmark + ", " +
+        city + ", " +
+        state + " - " +
+        pincode;
+
+    // Save full address string (same as before)
+    localStorage.setItem("deliveryAddress", fullAddress);
+
+    // Save address type
+    localStorage.setItem("addressType", selectedType);
+
+    // If address type is Other, save receiver info
+    if (selectedType === "Other") {
+
+        const receiverName = document.getElementById("receiverName").value;
+        const receiverPhone = document.getElementById("receiverPhone").value;
+
+        localStorage.setItem("receiverName", receiverName);
+        localStorage.setItem("receiverPhone", receiverPhone);
+
+    } else {
+
+        // Clear receiver info if not Other
+        localStorage.removeItem("receiverName");
+        localStorage.removeItem("receiverPhone");
+    }
+
+    window.location.href = "../cart.html";
+}
+
+function goToCart() {
+    window.location.href = "../cart.html";
+}
+
+function selectAddressType(type){
+
+    // save immediately
+    localStorage.setItem("addressType", type);
+
+    // UI highlight
+    document.querySelectorAll(".address-pill").forEach(btn=>{
+        btn.classList.remove("active-address-pill");
+    });
+
+    document.getElementById("type"+type).classList.add("active-address-pill");
+     const receiverSection = document.getElementById("receiverFields");
+
+    if(type === "Other"){
+        receiverSection.style.display = "block";
+    }else{
+        receiverSection.style.display = "none";
+    }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login | Eatzo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="profile-body">
+
+<div class="profile-topbar">
+    <a href="index.html" class="back-btn">←</a>
+    <span>Login</span>
+</div>
+
+<div class="profile-container">
+
+    <!-- HEADER CARD -->
+    <div class="profile-user-card">
+        <div class="profile-avatar">E</div>
+        <div>
+            <h2>Welcome to Eatzo</h2>
+            <p class="edit-profile">Verify your details to continue</p>
+        </div>
+    </div>
+
+    <!-- USER DETAILS SECTION -->
+    <div class="profile-section" id="detailsSection">
+
+        <div class="profile-item" style="flex-direction:column;">
+            <label><strong>Name</strong></label>
+            <input id="name" placeholder="Enter your full name"
+                   style="border:none;width:100%;font-size:15px;outline:none;">
+        </div>
+
+        <div class="profile-item" style="flex-direction:column;">
+            <label><strong>Email ID</strong></label>
+            <input id="email" type="email" placeholder="example@email.com"
+                   style="border:none;width:100%;font-size:15px;outline:none;">
+        </div>
+
+        <div class="profile-item" style="flex-direction:column;">
+            <label><strong>Date of Birth</strong></label>
+            <input id="dob" type="date"
+                   style="border:none;width:100%;font-size:15px;outline:none;">
+        </div>
+
+        <div class="profile-item" style="flex-direction:column;">
+            <label><strong>Phone Number</strong></label>
+            <input id="phone" placeholder="+91 XXXXX XXXXX"
+                   style="border:none;width:100%;font-size:15px;outline:none;">
+        </div>
+
+    </div>
+
+    <!-- OTP SECTION -->
+    <div class="profile-section" id="otpSection" style="display:none;">
+
+        <div class="profile-item" style="flex-direction:column;">
+            <label><strong>Enter OTP</strong></label>
+            <input id="otpInput" placeholder="6-digit OTP"
+                   style="border:none;width:100%;font-size:16px;outline:none;">
+            <small style="color:#888;">OTP sent to your phone number</small>
+             <p id="resendText" style="font-size:13px; color:#aaa; margin-top:8px;">
+        Resend OTP in 15s
+    </p>
+        </div>
+
+    </div>
+
+    <!-- ACTION BUTTON -->
+    <div class="profile-section">
+        <div id="actionBtn"
+             class="profile-item"
+             style="justify-content:center;
+                    background:#e23744;
+                    color:white;
+                    font-weight:600;
+                    cursor:pointer;">
+            Send OTP
+        </div>
+    </div>
+
+</div>
+
+<script>
+    
+    let generatedOTP = "";
+
+    document.getElementById("actionBtn").onclick = function () {
+
+        const otpSection = document.getElementById("otpSection");
+
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const dob = document.getElementById("dob").value;
+        const phone = document.getElementById("phone").value;
+
+        if (otpSection.style.display === "none") {
+
+            if (!name || !email || !dob || !phone) {
+                alert("Please fill all details before continuing");
+                return;
+            }
+
+            generatedOTP = Math.floor(100000 + Math.random() * 900000);
+            alert("Demo OTP: " + generatedOTP);
+
+            otpSection.style.display = "block";
+            this.innerText = "Verify OTP";
+            startResendTimer();
+
+        } else {
+
+            const enteredOTP = document.getElementById("otpInput").value;
+
+            if (enteredOTP == generatedOTP) {
+
+                // ✅ SAVE USER DATA
+                localStorage.setItem("username", name);
+                localStorage.setItem("email", email);
+                localStorage.setItem("phone", phone);
+
+                localStorage.setItem("eatzoUserName", name);
+                localStorage.setItem("eatzoLoggedIn", "true");
+                // Flag to show welcome screen
+                localStorage.setItem("showWelcome", "true");
+
+    
+                window.location.href = "index.html";
+
+            } else {
+                alert("Invalid OTP. Please try again.");
+            }
+        }
+    };
+
+    function startResendTimer(){
+
+    const resendText = document.getElementById("resendText");
+
+    timeLeft = 15;
+
+    resendText.style.color = "#aaa";
+    resendText.style.cursor = "default";
+    resendText.innerText = "Resend OTP in 15s";
+
+    resendText.onclick = null;
+
+    resendTimer = setInterval(() => {
+
+        timeLeft--;
+
+        resendText.innerText = "Resend OTP in " + timeLeft + "s";
+
+        if(timeLeft <= 0){
+            clearInterval(resendTimer);
+
+            resendText.innerText = "Resend OTP";
+           resendText.style.color = "#007bff";  // 🔥 clickable color
+            resendText.style.cursor = "pointer";
+
+            resendText.onclick = resendOTP;
+        }
+
+    },1000);
+}
+function resendOTP(){
+
+    generatedOTP = Math.floor(100000 + Math.random() * 900000);
+
+    alert("New OTP: " + generatedOTP);
+
+    startResendTimer(); // restart timer
+}
+
+</script>
+
+</body>
+</html>

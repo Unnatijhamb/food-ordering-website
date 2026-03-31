@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Available Coupons</title>
+
+<style>
+
+body{
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+background:#f5f6f8;
+margin:0;
+padding:40px 0;
+color:#1c1c1c;
+}
+
+.page{
+width:650px;
+margin:auto;
+}
+
+h2{
+margin-bottom:25px;
+font-size:24px;
+font-weight:600;
+}
+
+.coupon-section{
+margin-top:30px;
+margin-bottom:12px;
+font-size:14px;
+letter-spacing:1px;
+color:#7a7a7a;
+font-weight:600;
+}
+
+.coupon-card{
+background:white;
+border-radius:14px;
+padding:20px;
+margin-bottom:14px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 4px 14px rgba(0,0,0,0.06);
+}
+
+.coupon-info b{
+font-size:16px;
+}
+
+.coupon-info p{
+margin:6px 0 0 0;
+font-size:14px;
+color:#555;
+}
+
+.apply-btn{
+background:#e23744;
+color:white;
+border:none;
+padding:9px 18px;
+border-radius:8px;
+font-weight:600;
+cursor:pointer;
+}
+
+.apply-btn:hover{
+background:#c6283a;
+}
+
+/* APPLIED STYLE */
+
+.applied{
+background:#e6f6ea;
+color:#1c8f45;
+padding:8px 16px;
+border-radius:8px;
+font-weight:600;
+font-size:14px;
+}
+.disabled-coupon{
+opacity:0.5;
+pointer-events:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+<h2>Available Coupons</h2>
+
+<div class="coupon-section">Platform Offers</div>
+
+<div class="coupon-card" data-min="499">
+<div class="coupon-info">
+<b>FLAT100</b>
+<p>Get ₹100 off on orders above ₹499</p>
+</div>
+<div id="FLAT100"></div>
+</div>
+
+<div class="coupon-card" data-min="299">
+<div class="coupon-info">
+<b>WELCOME50</b>
+<p>Flat ₹50 off on your first order above ₹299</p>
+</div>
+<div id="WELCOME50"></div>
+</div>
+
+<div class="coupon-card" data-min="399">
+<div class="coupon-info">
+<b>SAVE20</b>
+<p>20% discount up to ₹120 on orders above ₹399</p>
+</div>
+<div id="SAVE20"></div>
+</div>
+
+<div class="coupon-section">Bank Offers</div>
+
+<div class="coupon-card">
+<div class="coupon-info">
+<b>HDFC200</b>
+<p>₹200 cashback using HDFC Credit Card above ₹799</p>
+</div>
+<div id="HDFC200"></div>
+</div>
+
+<div class="coupon-card">
+<div class="coupon-info">
+<b>ICICI150</b>
+<p>Flat ₹150 off using ICICI Debit Card above ₹699</p>
+</div>
+<div id="ICICI150"></div>
+</div>
+
+</div>
+
+
+<script>
+
+const coupons = {
+"FLAT100":100,
+"WELCOME50":50,
+"SAVE20":120,
+"HDFC200":200,
+"ICICI150":150
+};
+
+function renderCoupons(){
+
+const applied = localStorage.getItem("appliedCoupon");
+
+for(const code in coupons){
+
+const container = document.getElementById(code);
+
+if(applied === code){
+
+container.innerHTML =
+`<span class="applied">✓ Applied</span>`;
+
+}else{
+
+container.innerHTML =
+`<button class="apply-btn"
+onclick="applyCoupon('${code}',${coupons[code]})">
+Apply
+</button>`;
+
+}
+
+}
+
+}
+
+function applyCoupon(code, discount, minOrder){
+
+const cartTotal = getCartTotal();
+
+if(cartTotal < minOrder){
+
+const remaining = minOrder - cartTotal;
+
+alert(`Add ₹${remaining} more to apply this coupon`);
+
+return;
+
+}
+
+localStorage.setItem("appliedCoupon", code);
+localStorage.setItem("couponDiscount", discount);
+
+localStorage.setItem("showConfetti","true");
+
+window.location.href="cart.html";
+
+}
+renderCoupons();
+function getCartTotal(){
+
+const cart = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+let total = 0;
+
+cart.forEach(item=>{
+total += item.price;
+});
+
+return total;
+
+}
+window.onload = function(){
+
+const cartTotal = getCartTotal();
+
+document.querySelectorAll(".coupon-card").forEach(card=>{
+
+const minOrder = Number(card.dataset.min);
+
+if(cartTotal < minOrder){
+card.classList.add("disabled-coupon");
+}
+
+});
+
+};
+
+</script>
+
+</body>
+</html>

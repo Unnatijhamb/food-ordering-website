@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile | Eatzo</title>
+    <link rel="stylesheet" href="../style.css">
+    
+
+</head>
+
+<body class="profile-body">
+
+<div class="profile-topbar">
+    <a href="../index.html" class="back-btn">←</a>
+    <span>Profile</span>
+</div>
+
+<div class="profile-container">
+
+    <div class="profile-user-card">
+        <div class="profile-avatar">U</div>
+        <div>
+            <h2 id="profileName">user</h2>
+            <p class="edit-profile">
+    <a href="../login.html" style="text-decoration:none; color:#e23744;">
+        Edit profile ›
+    </a>
+</p>
+        </div>
+    </div>
+
+    <div class="profile-gold-card">
+        👑 Join Eatzo Gold <span>›</span>
+    </div>
+
+    <div class="profile-section">
+        <div class="profile-item">Eatzo Wallet <span>›</span></div>
+        <div class="profile-item">Your Coupons <span>›</span></div>
+        <div class="profile-item">Gift Cards <span>›</span></div>
+        <div class="profile-item" onclick="goToOrders()">Previous Orders <span>›</span></div>
+    </div>
+
+    <div class="profile-section">
+        <div class="profile-item">Feedback <span>›</span></div>
+        <div class="profile-item">Account Settings <span>›</span></div>
+        <div class="profile-item">Privacy & Security <span>›</span></div>
+    </div>
+
+   <div class="profile-section">
+        <div class="profile-item logout" onclick="logout()">Log Out</div>
+    </div>
+
+
+</div>
+<script>
+    const username = localStorage.getItem("username");
+
+    if (username) {
+        document.getElementById("profileName").innerText = username;
+        document.querySelector(".profile-avatar").innerText = username.charAt(0).toUpperCase();
+    }
+    function logout() {
+        localStorage.removeItem("username");
+        localStorage.removeItem("email");
+        localStorage.removeItem("phone");
+
+        window.location.href = "../index.html";
+    }
+    function goToOrders(){
+    window.location.href = "orders.html";
+}
+
+</script>
+
+
+</body>
+</html>
