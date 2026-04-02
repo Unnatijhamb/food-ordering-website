@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Eatzo Wallet</title>
+
+<link rel="stylesheet" href="../style.css">
+
+<style>
+
+body{
+    margin:0;
+    font-family: 'Segoe UI', sans-serif;
+    background:#f6f7fb;
+}
+
+/* Top bar */
+.wallet-topbar{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:16px 20px;
+    background:white;
+    font-weight:600;
+    box-shadow:0 2px 8px rgba(0,0,0,0.05);
+}
+
+.back-btn{
+    text-decoration:none;
+    font-size:18px;
+    color:#333;
+}
+
+/* Container */
+.wallet-container{
+    max-width:420px;
+    margin:30px auto;
+    padding:0 16px;
+}
+
+/* Wallet Card */
+.wallet-card{
+    background:linear-gradient(135deg,#e23744,#ff6b6b);
+    color:white;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 12px 30px rgba(226,55,68,0.25);
+    text-align:center;
+}
+
+.wallet-card p{
+    margin:0;
+    font-size:14px;
+    opacity:0.9;
+}
+
+.wallet-card h1{
+    font-size:44px;
+    margin:12px 0;
+    letter-spacing:1px;
+}
+
+.wallet-card span{
+    font-size:14px;
+    opacity:0.9;
+}
+
+/* Info box */
+.wallet-info{
+    margin-top:22px;
+    background:white;
+    padding:20px;
+    border-radius:16px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.05);
+}
+
+.wallet-info h3{
+    margin:0 0 12px;
+    font-size:16px;
+}
+
+.wallet-info p{
+    margin:8px 0;
+    font-size:13px;
+    color:#555;
+}
+
+/* Highlight */
+.highlight{
+    color:#e23744;
+    font-weight:600;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- Top Bar -->
+<div class="wallet-topbar">
+    <!-- ✅ FIXED PATH -->
+    <a href="profile.html" class="back-btn">←</a>
+    <span>Eatzo Wallet</span>
+</div>
+
+<!-- Main -->
+<div class="wallet-container">
+
+    <!-- Wallet Card -->
+    <div class="wallet-card">
+        <p>Your Balance</p>
+        <h1 id="walletPoints">0</h1>
+        <span>Eatzo Points</span>
+    </div>
+
+    <!-- Info -->
+    <div class="wallet-info">
+        <h3>How it works</h3>
+        <p>• Earn points on every order</p>
+        <p>• <span class="highlight">100 points = ₹10</span></p>
+        <p>• Points are added after successful payment</p>
+    </div>
+
+</div>
+
+<script>
+
+// ✅ SAFE LOAD (handles null properly)
+let points = parseInt(localStorage.getItem("eatzoWallet")) || 0;
+
+document.getElementById("walletPoints").innerText = points;
+
+</script>
+
+</body>
+</html>

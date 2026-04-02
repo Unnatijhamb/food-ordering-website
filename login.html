@@ -89,51 +89,59 @@
 
     document.getElementById("actionBtn").onclick = function () {
 
-        const otpSection = document.getElementById("otpSection");
+    const otpSection = document.getElementById("otpSection");
 
-        const name = document.getElementById("name").value;
-        const email = document.getElementById("email").value;
-        const dob = document.getElementById("dob").value;
-        const phone = document.getElementById("phone").value;
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const dob = document.getElementById("dob").value;
+    const phone = document.getElementById("phone").value;
 
-        if (otpSection.style.display === "none") {
+    // 🔹 STEP 1: SEND OTP
+    if (otpSection.style.display === "none") {
 
-            if (!name || !email || !dob || !phone) {
-                alert("Please fill all details before continuing");
-                return;
-            }
+        if (!name || !email || !dob || !phone) {
+            alert("Please fill all details before continuing");
+            return;
+        }
 
-            generatedOTP = Math.floor(100000 + Math.random() * 900000);
-            alert("Demo OTP: " + generatedOTP);
+        generatedOTP = Math.floor(100000 + Math.random() * 900000);
+        alert("Demo OTP: " + generatedOTP);
 
-            otpSection.style.display = "block";
-            this.innerText = "Verify OTP";
-            startResendTimer();
+        otpSection.style.display = "block";
+        this.innerText = "Verify OTP";
+
+        startResendTimer();
+    }
+
+    // 🔹 STEP 2: VERIFY OTP
+    else {
+
+        const enteredOTP = document.getElementById("otpInput").value;
+
+        if (enteredOTP == generatedOTP) {
+
+            // ✅ NEW STORAGE (CORRECT)
+            const nameParts = name.split(" ");
+
+            const userData = {
+                firstName: nameParts[0] || "",
+                lastName: nameParts[1] || "",
+                email: email,
+                phone: phone,
+                dob: dob
+            };
+
+            localStorage.setItem("userData", JSON.stringify(userData));
+
+            localStorage.setItem("eatzoLoggedIn", "true");
+
+            window.location.href = "index.html";
 
         } else {
-
-            const enteredOTP = document.getElementById("otpInput").value;
-
-            if (enteredOTP == generatedOTP) {
-
-                // ✅ SAVE USER DATA
-                localStorage.setItem("username", name);
-                localStorage.setItem("email", email);
-                localStorage.setItem("phone", phone);
-
-                localStorage.setItem("eatzoUserName", name);
-                localStorage.setItem("eatzoLoggedIn", "true");
-                // Flag to show welcome screen
-                localStorage.setItem("showWelcome", "true");
-
-    
-                window.location.href = "index.html";
-
-            } else {
-                alert("Invalid OTP. Please try again.");
-            }
+            alert("Invalid OTP. Please try again.");
         }
-    };
+    }
+};
 
     function startResendTimer(){
 

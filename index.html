@@ -468,6 +468,10 @@ if (address) {
 }
 </script>
 <script>
+    // ✅ Initialize wallet once
+if(!localStorage.getItem("eatzoWallet")){
+    localStorage.setItem("eatzoWallet", 0);
+}
 function filterItems(type, event){
 
     const cards = document.querySelectorAll(".card");
@@ -603,12 +607,17 @@ loadModel();
 
 async function sendDrawing(){
 
+    const canvas = document.getElementById("drawCanvas");
+
+    // 🔥 If model not ready → skip AI
     if(!model){
-        alert("AI still loading... wait");
+        console.log("Using fallback detection");
+
+        let detectedItem = detectFromCanvas() || "pizza";
+
+        redirectToRestaurant(detectedItem);
         return;
     }
-
-    const canvas = document.getElementById("drawCanvas");
 
     const img = new Image();
     img.src = canvas.toDataURL();
@@ -617,40 +626,33 @@ async function sendDrawing(){
 
         const predictions = await model.classify(img);
 
-        console.log("RAW AI:", predictions[0].className);
-
-        // ✅ 👉 ADD YOUR MAPPING HERE
         let detectedItem;
 
-// 1️⃣ Try canvas color logic first
-const colorResult = detectFromCanvas();
+        const colorResult = detectFromCanvas();
 
-if(colorResult){
-    detectedItem = colorResult;
-}
-else{
+        if(colorResult){
+            detectedItem = colorResult;
+        }
+        else{
+            let raw = predictions[0].className.toLowerCase();
+            
 
-    // 2️⃣ fallback to AI
-    let raw = predictions[0].className.toLowerCase();
-
-    if(raw.includes("burger") || raw.includes("sandwich")){
-        detectedItem = "burger";
-    }
-    else if(raw.includes("cake") || raw.includes("dessert")){
-        detectedItem = "cake";
-    }
-    else if(raw.includes("chicken")){
-        detectedItem = "chicken";
-    }
-    else{
-        detectedItem = "pizza";
-    }
-}
-
+            if(raw.includes("burger") || raw.includes("sandwich")){
+                detectedItem = "burger";
+            }
+            else if(raw.includes("cake") || raw.includes("dessert")){
+                detectedItem = "cake";
+            }
+            else if(raw.includes("chicken")){
+                detectedItem = "chicken";
+            }
+            else{
+                detectedItem = "pizza";
+            }
+        }
 
         console.log("FINAL DETECTED:", detectedItem);
 
-        // ✅ redirect AFTER mapping
         redirectToRestaurant(detectedItem);
     };
 }
@@ -703,12 +705,15 @@ function detectFromCanvas(){
     }
 
     if(red > green && red > blue){
+        
         return "pizza";
     }
     else if(green > red){
+       
         return "veg";
     }
     else{
+       
         return null;
     }
 }

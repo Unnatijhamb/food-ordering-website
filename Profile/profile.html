@@ -34,7 +34,10 @@
     </div>
 
     <div class="profile-section">
-        <div class="profile-item">Eatzo Wallet <span>›</span></div>
+        <a href="wallet.html" class="profile-item">
+    <span>Eatzo Wallet</span>
+    <span>›</span>
+</a>
         <div class="profile-item">Your Coupons <span>›</span></div>
         <div class="profile-item">Gift Cards <span>›</span></div>
         <div class="profile-item" onclick="goToOrders()">Previous Orders <span>›</span></div>
@@ -42,7 +45,9 @@
 
     <div class="profile-section">
         <div class="profile-item">Feedback <span>›</span></div>
-        <div class="profile-item">Account Settings <span>›</span></div>
+        <a href="account.html" class="profile-item">
+        Account Settings <span>›</span>
+    </a>
         <div class="profile-item">Privacy & Security <span>›</span></div>
     </div>
 
@@ -53,19 +58,27 @@
 
 </div>
 <script>
-    const username = localStorage.getItem("username");
+    const user = JSON.parse(localStorage.getItem("userData"));
+
+if(user){
+    document.getElementById("profileName").innerText =
+        user.firstName + " " + user.lastName;
+
+    document.querySelector(".profile-avatar").innerText =
+        user.firstName.charAt(0).toUpperCase();
+}
 
     if (username) {
         document.getElementById("profileName").innerText = username;
         document.querySelector(".profile-avatar").innerText = username.charAt(0).toUpperCase();
     }
     function logout() {
-        localStorage.removeItem("username");
-        localStorage.removeItem("email");
-        localStorage.removeItem("phone");
+    localStorage.removeItem("userData");   // 🔥 only this needed
+    localStorage.removeItem("eatzoLoggedIn");
+    localStorage.removeItem("eatzoUserName");
 
-        window.location.href = "../index.html";
-    }
+    window.location.href = "../index.html";
+}
     function goToOrders(){
     window.location.href = "orders.html";
 }

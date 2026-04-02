@@ -656,6 +656,33 @@ setTimeout(()=>{
     startTrackingCanvas();
 },800);
 }
+function addWalletPoints(orderAmount){
+
+    let points;
+
+    // 🎯 POINT LOGIC
+    if(orderAmount < 200){
+        points = 20;
+    }
+    else if(orderAmount < 500){
+        points = 60;
+    }
+    else if(orderAmount < 1000){
+        points = 120;
+    }
+    else{
+        points = 200;
+    }
+
+    let current = parseInt(localStorage.getItem("eatzoWallet")) || 0;
+
+    let updated = current + points;
+
+    localStorage.setItem("eatzoWallet", updated);
+
+    // 🎉 NEW ALERT (what you wanted)
+    alert(`🎉 +${points} points added to your Eatzo Wallet!`);
+}
 function startTrackingCanvas(){
 
 const steps = 5;
@@ -783,6 +810,7 @@ const cart = JSON.parse(localStorage.getItem("cartItems")) || [];
 const itemsText = cart.map(item => `${item.name} x${item.qty}`).join(", ");
 
 const totalPrice = cart.reduce((sum, item) => sum + (item.price), 0);
+addWalletPoints(totalPrice);
 
 
     const newOrder = {

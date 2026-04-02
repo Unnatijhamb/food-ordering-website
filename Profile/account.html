@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Account Settings - Eatzo</title>
+
+<link rel="stylesheet" href="../style.css">
+
+<style>
+body{
+    background:#f6f7fb;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Container */
+.account-container{
+    max-width:420px;
+    margin:40px auto;
+    padding:0 16px;
+}
+
+/* Back button */
+.back{
+    display:inline-block;
+    margin-bottom:20px;
+    color:#444;
+    text-decoration:none;
+    font-size:14px;
+}
+
+/* Card */
+.account-card{
+    background:#fff;
+    border-radius:20px;
+    padding:24px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* Heading */
+.account-card h2{
+    margin-bottom:20px;
+    font-size:22px;
+    font-weight:600;
+}
+
+/* Form layout */
+form{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+/* Labels */
+label{
+    font-size:13px;
+    color:#666;
+    margin-bottom:4px;
+}
+
+/* Inputs */
+input{
+    width:100%;
+    padding:12px 14px;
+    border-radius:12px;
+    border:1px solid #e0e0e0;
+    font-size:14px;
+    transition:all 0.2s ease;
+}
+
+/* Focus effect */
+input:focus{
+    outline:none;
+    border-color:#e23744;
+    box-shadow:0 0 0 2px rgba(226,55,68,0.1);
+}
+
+/* Readonly */
+input[readonly]{
+    background:#f1f3f6;
+    color:#888;
+    cursor:not-allowed;
+}
+
+/* Button */
+.save-btn{
+    margin-top:10px;
+    background:#e23744;
+    color:white;
+    border:none;
+    padding:14px;
+    border-radius:14px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:all 0.2s ease;
+}
+
+/* Hover */
+.save-btn:hover{
+    background:#d12d3a;
+    transform:translateY(-1px);
+}
+
+/* Click */
+.save-btn:active{
+    transform:scale(0.98);
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="account-container">
+
+    <a href="profile.html" class="back">← Back</a>
+
+    <div class="account-card">
+
+        <h2>Edit Profile</h2>
+
+        <form id="profileForm">
+
+            <label>First Name</label>
+            <input type="text" id="firstName">
+
+            <label>Last Name</label>
+            <input type="text" id="lastName">
+
+            <label>Email (cannot change)</label>
+            <input type="email" id="email" readonly>
+
+            <label>Phone Number</label>
+            <input type="text" id="phone">
+
+            <label>Date of Birth</label>
+            <input type="date" id="dob">
+
+            <button type="submit" class="save-btn">Save Changes</button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+
+// ✅ LOAD DATA
+const user = JSON.parse(localStorage.getItem("userData")) || {};
+
+document.getElementById("firstName").value = user.firstName || "";
+document.getElementById("lastName").value = user.lastName || "";
+document.getElementById("email").value = user.email || "";
+document.getElementById("phone").value = user.phone || "";
+document.getElementById("dob").value = user.dob || "";
+
+
+// ✅ SAVE DATA
+document.getElementById("profileForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    const updatedUser = {
+        firstName: document.getElementById("firstName").value,
+        lastName: document.getElementById("lastName").value,
+        email: document.getElementById("email").value, // stays fixed
+        phone: document.getElementById("phone").value,
+        dob: document.getElementById("dob").value
+    };
+
+    localStorage.setItem("userData", JSON.stringify(updatedUser));
+
+    alert("Profile updated successfully!");
+});
+
+</script>
+
+</body>
+</html>
