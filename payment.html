@@ -810,6 +810,20 @@ const cart = JSON.parse(localStorage.getItem("cartItems")) || [];
 const itemsText = cart.map(item => `${item.name} x${item.qty}`).join(", ");
 
 const totalPrice = cart.reduce((sum, item) => sum + (item.price), 0);
+
+// 🔥 STEP 1: DEDUCT USED WALLET POINTS
+let usedPoints = parseInt(localStorage.getItem("walletUsedPoints")) || 0;
+let currentWallet = parseInt(localStorage.getItem("eatzoWallet")) || 0;
+
+if(usedPoints > 0){
+    localStorage.setItem("eatzoWallet", currentWallet - usedPoints);
+}
+
+// 🔥 STEP 2: CLEAR WALLET TEMP DATA
+localStorage.removeItem("walletUsedPoints");
+localStorage.removeItem("walletDiscount");
+
+// 🔥 STEP 3: ADD NEW REWARD POINTS
 addWalletPoints(totalPrice);
 
 

@@ -484,6 +484,54 @@ margin:auto;
 padding:20px;
 padding-bottom:90px;
 }
+.wallet-use-box{
+background:white;
+border-radius:18px;
+padding:16px;
+margin-top:20px;
+box-shadow:0 3px 12px rgba(0,0,0,0.05);
+}
+
+.wallet-heading{
+font-size:13px;
+letter-spacing:1px;
+color:#8b8f94;
+margin-bottom:12px;
+}
+
+.wallet-row{
+display:flex;
+justify-content:space-between;
+font-size:14px;
+margin-bottom:10px;
+}
+
+.wallet-input-row{
+display:flex;
+gap:10px;
+}
+
+.wallet-input-row input{
+flex:1;
+padding:10px;
+border-radius:10px;
+border:1px solid #ddd;
+}
+
+.wallet-input-row button{
+background:#e23744;
+color:white;
+border:none;
+padding:10px 14px;
+border-radius:10px;
+cursor:pointer;
+}
+
+.wallet-msg{
+font-size:13px;
+margin-top:8px;
+color:#1c8f45;
+}
 
 /* COUPON APPLY CARD */
 </style>
@@ -544,7 +592,9 @@ const deliveryFee = 40;
 
 const discount = Number(localStorage.getItem("couponDiscount") || 0);
 
-const grandTotal = itemTotal + tax + deliveryFee - discount;
+const walletDiscount = Number(localStorage.getItem("walletDiscount") || 0);
+
+const grandTotal = itemTotal + tax + deliveryFee - discount - walletDiscount;
 
 container.innerHTML+=`
 <div class="add-more-items">
@@ -613,6 +663,27 @@ Add New
 </div>
 </div>
 `;
+const walletPoints = parseInt(localStorage.getItem("eatzoWallet")) || 0;
+
+container.innerHTML += `
+<div class="wallet-use-box">
+
+<h3 class="wallet-heading">USE EATZO WALLET</h3>
+
+<div class="wallet-row">
+    <span>Available Points</span>
+    <span>${walletPoints} pts</span>
+</div>
+
+<div class="wallet-input-row">
+    <input type="number" id="usePointsInput" placeholder="Enter points to use">
+    <button onclick="applyWallet()">Apply</button>
+</div>
+
+<div id="walletMessage" class="wallet-msg"></div>
+
+</div>
+`;
 loadSavedAddress();
 container.innerHTML += `
 <div class="bill-wrapper">
@@ -639,6 +710,10 @@ container.innerHTML += `
 <div class="bill-row">
 <span>Coupon discount</span>
 <span style="color:#1c8f45">−₹${discount}</span>
+</div>
+<div class="bill-row">
+<span>Wallet discount</span>
+<span style="color:#1c8f45">−₹${walletDiscount}</span>
 </div>
 
 <div class="bill-divider"></div>
@@ -840,6 +915,39 @@ localStorage.removeItem("couponDiscount");
 
 loadCart();
 
+}
+function applyWallet(){
+
+    const input = document.getElementById("usePointsInput").value;
+    const wallet = parseInt(localStorage.getItem("eatzoWallet")) || 0;
+
+    let pointsToUse = parseInt(input);
+
+    if(!pointsToUse || pointsToUse <= 0){
+        document.getElementById("walletMessage").innerText = "Enter valid points";
+        return;
+    }
+
+    if(pointsToUse > wallet){
+        document.getElementById("walletMessage").innerText = "Not enough points";
+        return;
+    }
+
+    // 🎯 Convert points → money
+    let discount = Math.floor(pointsToUse / 100) * 10;
+
+    if(discount <= 0){
+        document.getElementById("walletMessage").innerText = "Minimum 100 points required";
+        return;
+    }
+
+    // Save wallet usage
+    localStorage.setItem("walletUsedPoints", pointsToUse);
+    localStorage.setItem("walletDiscount", discount);
+
+    document.getElementById("walletMessage").innerText = `₹${discount} applied`;
+
+    loadCart(); // refresh UI
 }
 function goToPayment(){
 
